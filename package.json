@@ -1,0 +1,28 @@
+{
+  "name": "nagurum-og",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/K-Naveenkumar1/nagurum-og.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/K-Naveenkumar1/nagurum-og/issues"
+  },
+  "homepage": "https://github.com/K-Naveenkumar1/nagurum-og#readme",
+  "description": "",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.2",
+    "google-spreadsheet": "^5.0.2",
+    "multer": "^2.0.2"
+  }
+}

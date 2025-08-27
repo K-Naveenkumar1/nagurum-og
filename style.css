@@ -113,7 +113,7 @@ body {
     line-height: 1.3em;
 }
 .carousel .list .item .topic{
-    color: #f1683a;
+    color: #BE9843;
 }
 .carousel .list .item .buttons{
     display: grid;
@@ -140,7 +140,7 @@ body {
 .thumbnail{
     position: absolute;
     bottom: 50px;
-    left: 60%;
+    left: 50%;
     width: max-content;
     z-index: 100;
     display: flex;
@@ -175,7 +175,7 @@ body {
 .arrows{
     position: absolute;
     top: 80%;
-    right: 52%;
+    right: 60%;
     z-index: 100;
     width: 300px;
     max-width: 30%;
@@ -351,9 +351,12 @@ body {
 @media screen and (max-width: 678px) {
     .carousel .list .item .content{
         padding-right: 0;
-        font-size: 14px;
     }
     .carousel .list .item .content .title{
         font-size: 30px;
     }
+    .carousel .list .item .content .topic{
+        font-size: 70px;
+    }
+
 }
