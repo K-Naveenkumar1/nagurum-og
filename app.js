@@ -46,23 +46,64 @@ let runNextAuto = setTimeout(() => {
     next.click();
 }, timeAutoNext)
 function showSlider(type){
-    let  SliderItemsDom = SliderDom.querySelectorAll('.carousel .list .item');
+    let SliderItemsDom = SliderDom.querySelectorAll('.carousel .list .item');
     let thumbnailItemsDom = document.querySelectorAll('.carousel .thumbnail .item');
     
+    // Remove existing animation classes
+    carouselDom.classList.remove('next');
+    carouselDom.classList.remove('prev');
+    
+    // Force reflow to ensure animations restart properly
+    void carouselDom.offsetWidth;
+    
     if(type === 'next'){
-        SliderDom.appendChild(SliderItemsDom[0]);
-        thumbnailBorderDom.appendChild(thumbnailItemsDom[0]);
+        // Add the next item to the DOM before animation starts
+        if(SliderItemsDom.length > 1) {
+            // Position the next slide for animation
+            SliderItemsDom[1].style.zIndex = "0";
+            SliderItemsDom[0].style.zIndex = "1";
+        }
+        
+        // Add animation class
         carouselDom.classList.add('next');
-    }else{
+        
+        // After animation completes, update DOM order
+        clearTimeout(runTimeOut);
+        runTimeOut = setTimeout(() => {
+            SliderDom.appendChild(SliderItemsDom[0]);
+            thumbnailBorderDom.appendChild(thumbnailItemsDom[0]);
+            carouselDom.classList.remove('next');
+            // Reset z-index
+            SliderItemsDom.forEach(item => item.style.zIndex = "");
+        }, timeRunning);
+    } else {
+        // For previous slide, we need to move the last item to the front first
         SliderDom.prepend(SliderItemsDom[SliderItemsDom.length - 1]);
         thumbnailBorderDom.prepend(thumbnailItemsDom[thumbnailItemsDom.length - 1]);
+        
+        // Force reflow again after DOM manipulation
+        void carouselDom.offsetWidth;
+        
+        // Get updated DOM references after prepend
+        SliderItemsDom = SliderDom.querySelectorAll('.carousel .list .item');
+        
+        // Position slides for animation
+        if(SliderItemsDom.length > 1) {
+            SliderItemsDom[0].style.zIndex = "1";
+            SliderItemsDom[1].style.zIndex = "0";
+        }
+        
+        // Add animation class
         carouselDom.classList.add('prev');
+        
+        // After animation completes, clean up
+        clearTimeout(runTimeOut);
+        runTimeOut = setTimeout(() => {
+            carouselDom.classList.remove('prev');
+            // Reset z-index
+            SliderItemsDom.forEach(item => item.style.zIndex = "");
+        }, timeRunning);
     }
-    clearTimeout(runTimeOut);
-    runTimeOut = setTimeout(() => {
-        carouselDom.classList.remove('next');
-        carouselDom.classList.remove('prev');
-    }, timeRunning);
 
     clearTimeout(runNextAuto);
     runNextAuto = setTimeout(() => {
