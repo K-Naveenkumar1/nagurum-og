@@ -6,12 +6,25 @@
     width: 100vw;
     overflow: hidden;
     position: relative;
+    perspective: 1000px;
+}
+.carousel .list {
+    display: flex;
+    width: 100%;
+    transition: transform 0.5s ease-in-out;
+    position: relative;
 }
 .carousel .list .item{
+    min-width: 100%;
     width: 100%;
-    height: 100%;
+    flex-shrink: 0;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
     position: absolute;
     inset: 0 0 0 0;
+}
+.carousel .list .item.active {
+    opacity: 1;
 }
 .carousel .list .item img{
     width: 100%;
@@ -41,7 +54,7 @@
     line-height: 1.3em;
 }
 .carousel .list .item .topic{
-    color: #f1683a;
+    color: white;
 }
 .carousel .list .item .buttons{
     display: grid;
@@ -98,31 +111,45 @@
     font-weight: 300;
 }
 /* arrows */
-.arrows{
+.arrows {
     position: absolute;
-    top: 80%;
-    right: 52%;
+    top: 50%;
+    left: 0;
+    right: 0;
     z-index: 100;
-    width: 300px;
-    max-width: 30%;
     display: flex;
-    gap: 10px;
-    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+    transform: translateY(-50%);
+    pointer-events: none;
 }
-.arrows button{
-    width: 40px;
-    height: 40px;
+.arrows button {
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
-    background-color: #eee4;
-    border: none;
-    color: #fff;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 2px solid #fff;
+    color: #000;
     font-family: monospace;
     font-weight: bold;
-    transition: .5s;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    pointer-events: auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
-.arrows button:hover{
+.arrows button:hover {
     background-color: #fff;
-    color: #000;
+    transform: scale(1.1);
+}
+.arrows button:first-child {
+    margin-right: auto;
+}
+.arrows button:last-child {
+    margin-left: auto;
 }
 
 /* animation */
@@ -130,65 +157,42 @@
     z-index: 1;
 }
 
-/* Horizontal slide animation */
-.carousel.next .list .item:nth-child(1) {
-    animation: slideNextOut 0.8s forwards;
+/* Smooth horizontal slide animation */
+.carousel .list .item {
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
+    transform: translateX(100%);
+    opacity: 0;
 }
 
-.carousel.next .list .item:nth-child(2) {
-    animation: slideNextIn 0.8s forwards;
+.carousel .list .item.active {
+    transform: translateX(0);
+    opacity: 1;
 }
 
-.carousel.prev .list .item:nth-child(1) {
-    animation: slidePrevOut 0.8s forwards;
+.carousel.next .list .item.active {
+    transform: translateX(-100%);
+    opacity: 0;
 }
 
-.carousel.prev .list .item:nth-child(2) {
-    animation: slidePrevIn 0.8s forwards;
+.carousel.next .list .item.active + .item {
+    transform: translateX(0);
+    opacity: 1;
 }
 
-@keyframes slideNextOut {
-    from {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
+.carousel.prev .list .item.active {
+    transform: translateX(100%);
+    opacity: 0;
 }
 
-@keyframes slideNextIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
+.carousel.prev .list .item:not(.active) {
+    transform: translateX(0);
+    opacity: 1;
 }
 
-@keyframes slidePrevOut {
-    from {
-        transform: translateX(0);
-        opacity: 1;
-    }
-    to {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-}
-
-@keyframes slidePrevIn {
-    from {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
+/* Initial active state */
+.carousel .list .item:first-child {
+    transform: translateX(0);
+    opacity: 1;
 }
 
 /* animation text in first item */
@@ -196,7 +200,8 @@
 .carousel .list .item:nth-child(1) .content .title,
 .carousel .list .item:nth-child(1) .content .topic,
 .carousel .list .item:nth-child(1) .content .des,
-.carousel .list .item:nth-child(1) .content .buttons
+.carousel .list .item:nth-child(1) .content .buttons,
+.carousel .list .item:nth-child(1) .content .btn
 {
     transform: translateY(50px);
     filter: blur(20px);
@@ -222,6 +227,56 @@
 .carousel .list .item:nth-child(1) .content .buttons{
     animation-delay: 1.8s!important;
 }
+.carousel .list .item:nth-child(1) .content .btn {
+    animation-delay: 2s!important;
+}
+/* Carousel Navigation Arrows */
+.carousel {
+    position: relative;
+}
+
+.carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    color: #000;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-arrow:hover {
+    background: #fff;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.prev-arrow {
+    left: 20px;
+}
+
+.next-arrow {
+    right: 20px;
+}
+
+/* Hide arrows on mobile */
+@media (max-width: 768px) {
+    .carousel-arrow {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
 /* create animation when next click */
 .carousel.next .list .item:nth-child(1) img{
     width: 150px;
